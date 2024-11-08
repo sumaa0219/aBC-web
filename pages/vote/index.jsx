@@ -30,6 +30,12 @@ export default function IndexPage() {
                 }));
                 setData(agendaArray);
             }
+            if (session && session.user) {
+                const userInfo = await readDB('user', session.userID);
+                if (userInfo) {
+                    setVoteCount(userInfo.vote.count);
+                }
+            }
         };
         fetchData();
     }, []);
@@ -66,7 +72,6 @@ export default function IndexPage() {
             const confirmation = window.confirm('この操作は取り消しできません。それでも大丈夫ですか？');
             if (confirmation) {
                 try {
-                    console.log(selectedItems);
                     if (!session || !session.user) {
                         alert('ユーザー情報が取得できませんでした。再度ログインしてください。');
                         return;
@@ -79,15 +84,14 @@ export default function IndexPage() {
                     }
                     const nowtime = new Date();
                     const formattedDate = `${nowtime.getFullYear()}${String(nowtime.getMonth() + 1).padStart(2, '0')}${String(nowtime.getDate()).padStart(2, '0')}`;
-                    console.log(userInfo);
+
 
                     var userVoteList = userInfo.vote.voteList || {};
-                    console.log("before", userVoteList);
+
                     userVoteList[formattedDate] = selectedItems;
-                    console.log("after", userVoteList);
+
                     userInfo.vote.voteList = userVoteList;
                     userInfo.vote.count = 0;
-                    console.log(userInfo);
                     await writeDB('user', session.userID, userInfo);
 
                     selectedItems.forEach(async (item) => {
@@ -99,12 +103,13 @@ export default function IndexPage() {
                             if (!agendaItem.voteUser.includes(session.userID)) {
                                 agendaItem.voteUser.push(session.userID);
                             }
-                            console.log(agendaItem);
+
                             await writeDB('agenda', item, agendaItem);
                         }
                     });
 
                     alert('投票が正常に送信されました。');
+                    router.push('/vote');
                 } catch (error) {
                     console.error('投票の送信中にエラーが発生しました:', error);
                     alert('投票の送信中にエラーが発生しました。');
@@ -119,6 +124,14 @@ export default function IndexPage() {
         return (
             <DefaultLayout>
                 <p>現在は投票期間外です。</p>
+            </DefaultLayout>
+        );
+    }
+    if (voteCount === 0) {
+        return (
+            <DefaultLayout>
+                <p>残りの投票回数がありません。</p>
+                <p>投票ありがとうございました。次回の投票期間までお待ちください。</p>
             </DefaultLayout>
         );
     }
