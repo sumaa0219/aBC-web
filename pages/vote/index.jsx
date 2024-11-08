@@ -93,7 +93,7 @@ export default function IndexPage() {
 
                     userInfo.vote.voteList = userVoteList;
                     userInfo.vote.count = 0;
-                    // await writeDB('user', session.userID, userInfo);
+                    await writeDB('user', session.userID, userInfo);
 
                     selectedItems.forEach(async (item) => {
                         const agendaItem = await readDB('agenda', item);
