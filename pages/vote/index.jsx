@@ -29,6 +29,7 @@ export default function IndexPage() {
                     ...collectionData[key]
                 }));
                 setData(agendaArray);
+                console.log('agendaArray', agendaArray);
             }
             if (session && session.user) {
                 const userInfo = await readDB('user', session.userID);
@@ -92,22 +93,26 @@ export default function IndexPage() {
 
                     userInfo.vote.voteList = userVoteList;
                     userInfo.vote.count = 0;
-                    await writeDB('user', session.userID, userInfo);
+                    // await writeDB('user', session.userID, userInfo);
 
                     selectedItems.forEach(async (item) => {
                         const agendaItem = await readDB('agenda', item);
                         if (agendaItem) {
                             if (!Array.isArray(agendaItem.voteUser)) {
-                                agendaItem.voteUser = [];
+                                if (typeof agendaItem.voteUser === 'string') {
+                                    const existingUser = agendaItem.voteUser;
+                                    agendaItem.voteUser = [existingUser];
+                                } else {
+                                    agendaItem.voteUser = [];
+                                }
                             }
                             if (!agendaItem.voteUser.includes(session.userID)) {
                                 agendaItem.voteUser.push(session.userID);
                             }
-
+                            console.log(agendaItem);
                             await writeDB('agenda', item, agendaItem);
                         }
                     });
-
                     alert('投票が正常に送信されました。');
                     router.push('/vote');
                 } catch (error) {
