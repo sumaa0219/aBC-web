@@ -12,7 +12,7 @@ const SignIn: React.FC = () => {
     };
 
     const handleServerJoin = () => {
-        router.push("https://discord.gg/qs3u8Mx6"); // Discordサーバーに参加
+        router.push("https://discord.gg/98SghTmP"); // Discordサーバーに参加
     };
 
     return (
