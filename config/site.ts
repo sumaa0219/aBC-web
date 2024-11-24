@@ -16,16 +16,8 @@ export const siteConfig = {
       label: "メンバー",
       href: "/member",
     },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
-      label: "About",
-      href: "/about",
-    },
   ],
-  navMenuItems: [
+  managerNavItems: [
     {
       label: "ホーム",
       href: "/",
@@ -39,20 +31,8 @@ export const siteConfig = {
       href: "/member",
     },
     {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
+      label: "管理",
+      href: "/manager",
     },
 
   ],

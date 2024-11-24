@@ -11,6 +11,16 @@ import { useState } from "react";
 import { Link } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 
+interface SessionData {
+  user: {
+    name: string;
+    image: string;
+  };
+  highestRole: {
+    name: string;
+  };
+}
+
 export const Navbar = () => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -18,6 +28,11 @@ export const Navbar = () => {
   const handleSignIn = () => {
     signIn("discord", { callbackUrl: "/" }); // Discordでのサインイン
   };
+  const sessionData = session as SessionData | any;
+
+  const specificRoles = ['管理者', '運営', '開発者']; // 特定の文字列の配列
+  const navItems = session && specificRoles.includes(sessionData.highestRole.name) ? siteConfig.managerNavItems : siteConfig.navItems;
+
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -29,8 +44,9 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">aBC DAO</p>
           </NextLink>
         </NavbarBrand>
-        <div className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
+        <div className="hidden sm:flex gap-4 justify-start ml-2">
+
+          {navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
                 className="text-foreground hover:text-primary transition-colors duration-200 data-[active=true]:text-primary data-[active=true]:font-medium"
@@ -46,13 +62,13 @@ export const Navbar = () => {
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navItems.map((item, index) => (
+          {navItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
                 color={
                   index === 2
                     ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
+                    : index === navItems.length - 1
                       ? "danger"
                       : "foreground"
                 }
@@ -107,7 +123,7 @@ export const Navbar = () => {
                   <p className="font-semibold">{session.user?.name}</p>
                 </DropdownItem>
                 <DropdownItem key="logout" className="h-14 gap-2" onClick={() => signOut()}>
-                  Sign Out
+                  サインアウト
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

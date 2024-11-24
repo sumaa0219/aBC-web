@@ -17,7 +17,7 @@ export default function IndexPage() {
   const { data: session } = useSession();
   const router = useRouter();
   // const aaa = await readDB('user', 425853700112908289);
-  // console.log(aaa);
+
 
 
   return (

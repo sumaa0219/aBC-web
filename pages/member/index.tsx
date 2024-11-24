@@ -23,7 +23,14 @@ const IndexPage = () => {
         const fetchData = async () => {
             const usersData: any = await readDB("user");
             if (usersData) {
-                setUserData(usersData);
+                // ユーザー名でソート
+                const sortedUsersData = Object.keys(usersData)
+                    .sort((a, b) => usersData[a].userDisplayName.localeCompare(usersData[b].userDisplayName))
+                    .reduce((acc, key) => {
+                        acc[key] = usersData[key];
+                        return acc;
+                    }, {} as UserData);
+                setUserData(sortedUsersData);
             }
         };
         fetchData();
