@@ -5,7 +5,7 @@ export const siteConfig = {
   description: "Make beautiful websites regardless of your design unexperience.",
   navItems: [
     {
-      label: "Home",
+      label: "ホーム",
       href: "/",
     },
     {
@@ -13,8 +13,8 @@ export const siteConfig = {
       href: "/vote",
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: "メンバー",
+      href: "/member",
     },
     {
       label: "Blog",
@@ -27,16 +27,16 @@ export const siteConfig = {
   ],
   navMenuItems: [
     {
-      label: "Profile",
-      href: "/profile",
+      label: "ホーム",
+      href: "/",
     },
     {
-      label: "Dashboard",
-      href: "/dashboard",
+      label: "投票",
+      href: "/vote",
     },
     {
-      label: "Projects",
-      href: "/projects",
+      label: "メンバー",
+      href: "/member",
     },
     {
       label: "Team",

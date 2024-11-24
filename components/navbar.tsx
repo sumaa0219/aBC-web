@@ -21,8 +21,8 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarMenuToggle />
+      <NavbarContent className="hidden basis-1/5 sm:flex" justify="start">
+
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
@@ -46,7 +46,7 @@ export const Navbar = () => {
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
+          {siteConfig.navItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
                 color={
@@ -56,7 +56,7 @@ export const Navbar = () => {
                       ? "danger"
                       : "foreground"
                 }
-                href="#"
+                href={item.href}
                 size="lg"
               >
                 {item.label}
@@ -66,15 +66,29 @@ export const Navbar = () => {
         </div>
       </NavbarMenu>
 
-      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
-        <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal href={"https://discord.gg/qs3u8Mx6"} title="Discord">
+      <NavbarContent className="sm:hidden basis-1 pl-4" justify="start">
+        <NavbarMenuToggle />
+        <NavbarBrand className="gap-3 max-w-fit">
+          <NextLink className="flex justify-start items-center gap-1" href="/">
+            <Logo />
+            <p className="font-bold text-inherit">aBC DAO</p>
+          </NextLink>
+        </NavbarBrand>
+      </NavbarContent>
+
+
+
+
+
+      <NavbarContent className="sm:flex basis-1/5" justify="end">
+        <NavbarItem className="sm:flex gap-2">
+          <Link isExternal href={"https://discord.gg/6wpa6ZQVzg"} title="Discord">
             <DiscordIcon className="text-default-500" />
           </Link>
           <ThemeSwitch />
         </NavbarItem>
         {session ? (
-          <NavbarItem className="hidden md:flex">
+          <NavbarItem className="md:flex">
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
                 <Avatar

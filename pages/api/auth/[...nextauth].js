@@ -22,6 +22,7 @@ export default NextAuth({
             // 特定のギルドに所属しているかどうかの情報のみセッションに追加
             session.isInTargetGuild = token.isInTargetGuild;
             session.userID = token.userID;
+            session.highestRole = token.highestRole;
             return session;
         },
         async jwt({ token, account }) {
@@ -44,6 +45,28 @@ export default NextAuth({
                 // 特定のギルドIDに属しているか確認
                 const targetGuildId = "1270650390303473714";
                 token.isInTargetGuild = guilds.some(guild => guild.id === targetGuildId);
+
+                if (token.isInTargetGuild) {
+                    // 特定のギルドのメンバー情報を取得
+                    const member = await fetch(`https://discord.com/api/guilds/${targetGuildId}/members/${user.id}`, {
+                        headers: {
+                            Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+                        },
+                    }).then((res) => res.json());
+
+
+                    // 最上位のロールを取得
+                    const roles = member.roles;
+                    const roleDetails = await Promise.all(roles.map(roleId =>
+                        fetch(`https://discord.com/api/guilds/${targetGuildId}/roles/${roleId}`, {
+                            headers: {
+                                Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+                            },
+                        }).then((res) => res.json())
+                    ));
+                    const highestRole = roleDetails.sort((a, b) => b.position - a.position)[0];
+                    token.highestRole = highestRole;
+                }
             }
             return token;
         },

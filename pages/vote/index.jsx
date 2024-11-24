@@ -114,7 +114,7 @@ export default function IndexPage() {
                         }
                     });
                     alert('投票が正常に送信されました。');
-                    router.push('/vote');
+                    location.reload();
                 } catch (error) {
                     console.error('投票の送信中にエラーが発生しました:', error);
                     alert('投票の送信中にエラーが発生しました。');
