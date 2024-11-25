@@ -29,7 +29,6 @@ export default function IndexPage() {
                     ...collectionData[key]
                 }));
                 setData(agendaArray);
-                console.log('agendaArray', agendaArray);
             }
             if (session && session.user) {
                 const userInfo = await readDB('user', session.userID);
@@ -109,7 +108,6 @@ export default function IndexPage() {
                             if (!agendaItem.voteUser.includes(session.userID)) {
                                 agendaItem.voteUser.push(session.userID);
                             }
-                            console.log(agendaItem);
                             await writeDB('agenda', item, agendaItem);
                         }
                     });

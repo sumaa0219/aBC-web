@@ -1,4 +1,4 @@
-import { collection, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc, setDoc, addDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
 export async function readDB(coll, document = null) {
@@ -35,4 +35,8 @@ function flattenData(data) {
 export async function writeDB(coll, document, data) {
     const flattenedData = flattenData(data);
     await setDoc(doc(db, coll, document), flattenedData);
+}
+
+export async function writeDBDB(coll, data) {
+    await addDoc(collection(db, coll), data);
 }
