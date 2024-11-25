@@ -28,11 +28,12 @@ export const Navbar = () => {
   const handleSignIn = () => {
     signIn("discord", { callbackUrl: "/" }); // Discordでのサインイン
   };
-  const sessionData = session as SessionData | any;
+  const sessionData = session as any;
+  console.log(sessionData);
 
   const specificRoles = ['管理者', '運営', '開発者']; // 特定の文字列の配列
-  // const navItems = session && specificRoles.includes(sessionData.highestRole.name) ? siteConfig.managerNavItems : siteConfig.navItems;
-  const navItems = siteConfig.managerNavItems;
+  const navItems = session && specificRoles.includes(sessionData.highestRole.name) ? siteConfig.managerNavItems : siteConfig.navItems;
+  // const navItems = siteConfig.managerNavItems;
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
