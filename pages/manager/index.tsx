@@ -9,7 +9,8 @@ interface SessionData {
         name: string;
         image: string;
 
-    }, highestRole: {
+    };
+    highestRole: {
         name: string;
     };
 }
