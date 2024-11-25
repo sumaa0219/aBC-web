@@ -15,7 +15,7 @@ interface SessionData {
   user: {
     name: string;
     image: string;
-  };
+  },
   highestRole: {
     name: string;
   };
