@@ -28,7 +28,7 @@ const SignIn: React.FC = () => {
                 />
 
                 <div style={{ display: 'flex', gap: '40px' }}>
-                    <button
+                    {/* <button
                         onClick={handleServerJoin}
                         style={{
                             width: '100%',
@@ -42,7 +42,7 @@ const SignIn: React.FC = () => {
                         }}
                     >
                         join our server!!
-                    </button>
+                    </button> */}
 
                     <button
                         onClick={handleSignIn}

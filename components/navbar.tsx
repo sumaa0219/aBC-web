@@ -46,7 +46,7 @@ export const Navbar = () => {
         </NavbarBrand>
         <div className="hidden sm:flex gap-4 justify-start ml-2">
 
-          {navItems.map((item) => (
+          {navItems.map((item: any) => (
             <NavbarItem key={item.href}>
               <NextLink
                 className="text-foreground hover:text-primary transition-colors duration-200 data-[active=true]:text-primary data-[active=true]:font-medium"
@@ -62,7 +62,7 @@ export const Navbar = () => {
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {navItems.map((item, index) => (
+          {navItems.map((item: any, index: any) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
                 color={
@@ -98,10 +98,7 @@ export const Navbar = () => {
 
       <NavbarContent className="sm:flex basis-1/5" justify="end">
         <NavbarItem className="sm:flex gap-2">
-          <Link isExternal href={"https://discord.gg/6wpa6ZQVzg"} title="Discord">
-            <DiscordIcon className="text-default-500" />
-          </Link>
-          <ThemeSwitch />
+          {/* <ThemeSwitch /> */}
         </NavbarItem>
         {session ? (
           <NavbarItem className="md:flex">

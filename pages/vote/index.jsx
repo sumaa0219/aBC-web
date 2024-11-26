@@ -43,7 +43,7 @@ export default function IndexPage() {
     useEffect(() => {
         const now = new Date();
         const day = now.getDate();
-        if (day >= 3 || day < 1) {
+        if (day >= 15 || day < 26) {
             setCanVote(true);
         }
     }, []);
