@@ -88,7 +88,7 @@ const JoinPage: React.FC = () => {
                     <ModalContent>
                         {(onClose) => (
                             <>
-                                <ModalHeader className="flex flex-col gap-1">利用規約</ModalHeader>
+                                <ModalHeader className="flex flex-col gap-1">最後まで読んで同意してください</ModalHeader>
                                 <ModalBody>
                                     {markdown ? (
                                         <StyledMarkdown className={"prose dark:prose-dark"}>{markdown}</StyledMarkdown>
@@ -101,7 +101,7 @@ const JoinPage: React.FC = () => {
                                         閉じる
                                     </Button>
                                     <Button color="primary" onPress={onClose}>
-                                        承諾
+                                        同意
                                     </Button>
                                 </ModalFooter>
                             </>
