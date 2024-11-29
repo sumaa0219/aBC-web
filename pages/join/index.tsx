@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { readDB } from "@/components/database";
+import { readDB, writeDB } from "@/components/database"; // writeDB をインポート
 import DefaultLayout from "@/layouts/default";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Input, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import ReactMarkdown from "react-markdown";
 import styled from 'styled-components';
 
@@ -16,8 +16,12 @@ const JoinPage: React.FC = () => {
     const { code } = router.query;
     const [isValidCode, setIsValidCode] = useState<boolean | null>(null);
     const [inviteList, setInviteList] = useState<string[]>([]);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen: isOpen1, onOpen: onOpen1, onOpenChange: onOpenChange1 } = useDisclosure();
+    const { isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
     const [markdown, setMarkdown] = useState<string>("");
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [affiliation, setAffiliation] = useState<string>("");
 
     useEffect(() => {
         if (code) {
@@ -62,6 +66,35 @@ const JoinPage: React.FC = () => {
         }
     };
 
+    const handleRegister = async () => {
+        try {
+            await writeDB('invitation', code, { "name": name, "email": email, "affiliation": affiliation, "code": code, "timestamp": new Date().toISOString() });
+            alert('登録が完了しました。\nメールボックスを確認してください');
+
+            // メール送信APIを呼び出す
+            const response = await fetch('/api/sendEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, name, code }),
+            });
+
+
+
+            if (response.ok) {
+                console.log('Email sent successfully');
+                window.location.href = '/'; // リダイレクト
+
+            } else {
+                console.error('Error sending email');
+            }
+        } catch (error) {
+            console.error('Error registering user:', error);
+            alert('登録に失敗しました');
+        }
+    };
+
     if (isValidCode === null) {
         return <div>招待コードがありません</div>;
     }
@@ -73,13 +106,13 @@ const JoinPage: React.FC = () => {
     return (
         <DefaultLayout>
             <>
+                <Button onPress={onOpen1}>Open Modal 1</Button>
 
-                <Button onPress={onOpen}>Open Modal</Button>
                 <Modal
                     size='5xl'
                     backdrop="blur"
-                    isOpen={isOpen}
-                    onOpenChange={onOpenChange}
+                    isOpen={isOpen1}
+                    onOpenChange={onOpenChange1}
                     scrollBehavior='inside'
                     classNames={{
                         backdrop: "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20"
@@ -93,15 +126,79 @@ const JoinPage: React.FC = () => {
                                     {markdown ? (
                                         <StyledMarkdown className={"prose dark:prose-dark"}>{markdown}</StyledMarkdown>
                                     ) : (
-                                        <p>Loading...</p>
+                                        <>
+                                            <Spinner label="利用規約を読み込んでいます..." size='lg' color="primary" />
+                                        </>
                                     )}
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button color="danger" variant="light" onPress={onClose}>
                                         閉じる
                                     </Button>
-                                    <Button color="primary" onPress={onClose}>
-                                        同意
+                                    {markdown ? (
+                                        <Button color="primary" onPress={() => { onClose(); onOpen2(); }}>
+                                            同意
+                                        </Button>
+                                    ) : (
+                                        <Button color="primary" isDisabled onPress={() => { onClose(); onOpen2(); }}>
+                                            同意
+                                        </Button>
+                                    )}
+
+                                </ModalFooter>
+                            </>
+                        )}
+                    </ModalContent>
+                </Modal>
+
+                <Modal
+                    size='5xl'
+                    backdrop="blur"
+                    isOpen={isOpen2}
+                    onOpenChange={onOpenChange2}
+                    scrollBehavior='inside'
+                    classNames={{
+                        backdrop: "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20"
+                    }}
+                >
+                    <ModalContent>
+                        {(onClose) => (
+                            <>
+                                <ModalHeader className="flex flex-col gap-1">登録フォーム</ModalHeader>
+                                <ModalBody>
+                                    <Input
+                                        autoFocus
+                                        label="名前"
+                                        placeholder="氏名を入力して下さい"
+                                        variant="bordered"
+                                        isRequired
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                    <Input
+                                        label="メールアドレス"
+                                        type='email'
+                                        placeholder="メールアドレスを入力して下さい"
+                                        variant="bordered"
+                                        isRequired
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                    <Input
+                                        label="所属"
+                                        placeholder="ない場合は「ない」と書いてください"
+                                        variant="bordered"
+                                        isRequired
+                                        value={affiliation}
+                                        onChange={(e) => setAffiliation(e.target.value)}
+                                    />
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="danger" variant="flat" onPress={onClose}>
+                                        Close
+                                    </Button>
+                                    <Button color="primary" onPress={async () => { await handleRegister(); onClose(); }}>
+                                        登録
                                     </Button>
                                 </ModalFooter>
                             </>

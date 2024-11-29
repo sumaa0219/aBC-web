@@ -11,10 +11,6 @@ const SignIn: React.FC = () => {
         signIn("discord", { callbackUrl: "/" }); // Discordでのサインイン
     };
 
-    const handleServerJoin = () => {
-        router.push("https://discord.gg/6wpa6ZQVzg"); // Discordサーバーに参加
-
-    };
 
     return (
         <DefaultLayout>
