@@ -25,6 +25,7 @@
 		"@notionhq/client": "^2.2.15",
 		"@react-aria/visually-hidden": "3.8.12",
 		"@tailwindcss/typography": "^0.5.15",
+		"@types/nodemailer": "^6.4.17",
 		"clsx": "2.1.1",
 		"firebase": "^11.0.1",
 		"firebase-admin": "^12.7.0",
