@@ -167,7 +167,6 @@ const JoinPage: React.FC = () => {
                                 <ModalHeader className="flex flex-col gap-1">登録フォーム</ModalHeader>
                                 <ModalBody>
                                     <Input
-                                        autoFocus
                                         label="名前"
                                         placeholder="氏名を入力して下さい"
                                         variant="bordered"
