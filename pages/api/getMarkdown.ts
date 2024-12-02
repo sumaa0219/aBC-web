@@ -16,7 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const mdblocks = await n2m.pageToMarkdown(pageId);
+        const mdblocksPromise = n2m.pageToMarkdown(pageId);
+        const mdblocks = await mdblocksPromise;
         const mdStringObject = n2m.toMarkdownString(mdblocks);
         res.status(200).json({ markdown: mdStringObject.parent });
     } catch (error) {

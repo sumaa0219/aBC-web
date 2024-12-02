@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { readDB, writeDB } from "@/components/database"; // writeDB をインポート
 import DefaultLayout from "@/layouts/default";
-import { Input, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Input, Select, SelectItem, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import ReactMarkdown from "react-markdown";
 import styled from 'styled-components';
+
 
 const StyledMarkdown = styled(ReactMarkdown)`
   color: ${({ theme }) => theme.colors.text};
@@ -16,12 +17,22 @@ const JoinPage: React.FC = () => {
     const { code } = router.query;
     const [isValidCode, setIsValidCode] = useState<boolean | null>(null);
     const [inviteList, setInviteList] = useState<string[]>([]);
+    const [invitations, setInvitation] = useState<any>();
     const { isOpen: isOpen1, onOpen: onOpen1, onOpenChange: onOpenChange1 } = useDisclosure();
     const { isOpen: isOpen2, onOpen: onOpen2, onOpenChange: onOpenChange2 } = useDisclosure();
     const [markdown, setMarkdown] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [affiliation, setAffiliation] = useState<string>("");
+    const [inviter, setInviter] = useState<string>("");
+    const [classification, setClassification] = useState<string>("");
+
+    const selectItems = [
+        { key: "company", label: "企業" },
+        { key: "social-sector", label: "ソーシャルセクター" },
+        { key: "individual", label: "個人" },
+        { key: "other", label: "その他" }
+    ];
 
     useEffect(() => {
         if (code) {
@@ -32,11 +43,18 @@ const JoinPage: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const invitations = await readDB('invite');
-            if (invitations) setInviteList(Object.keys(invitations));
+            const invi = await readDB('invite')
+            setInvitation(invi);
         };
         fetchData();
     }, [code]);
+
+    useEffect(() => {
+        if (invitations) {
+            setInviteList(Object.keys(invitations));
+        }
+
+    }, [invitations]);
 
     useEffect(() => {
         const fetchMarkdown = async () => {
@@ -60,34 +78,44 @@ const JoinPage: React.FC = () => {
 
     const validateCode = async (code: string) => {
         if (inviteList.includes(code)) {
-            setIsValidCode(true);
-        } else {
+            if (invitations[code].uses >= invitations[code].max_uses) {
+                setIsValidCode(false);
+            } else {
+                setIsValidCode(true);
+            };
+        }
+        else {
             setIsValidCode(false);
         }
     };
 
     const handleRegister = async () => {
         try {
-            await writeDB('invitation', code, { "name": name, "email": email, "affiliation": affiliation, "code": code, "timestamp": new Date().toISOString() });
-            alert('登録が完了しました。\nメールボックスを確認してください');
-
-            // メール送信APIを呼び出す
-            const response = await fetch('/api/sendEmail', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, name, code }),
-            });
-
-
-
-            if (response.ok) {
-                console.log('Email sent successfully');
-                window.location.href = '/'; // リダイレクト
-
+            if (!name && !email && !affiliation && !inviter && !classification) {
+                alert('全ての項目を入力してください');
+                return;
             } else {
-                console.error('Error sending email');
+                await writeDB('invitation', code, { "name": name, "email": email, "affiliation": affiliation, "inviter": inviter, "classification": classification, "code": code, "timestamp": new Date().toISOString() });
+                alert('登録が完了しました。\nメールボックスを確認してください');
+
+                // メール送信APIを呼び出す
+                const response = await fetch('/api/sendEmail', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, name, code }),
+                });
+
+
+
+                if (response.ok) {
+                    console.log('Email sent successfully');
+                    window.location.href = '/'; // リダイレクト
+
+                } else {
+                    console.error('Error sending email');
+                }
             }
         } catch (error) {
             console.error('Error registering user:', error);
@@ -106,7 +134,7 @@ const JoinPage: React.FC = () => {
     return (
         <DefaultLayout>
             <>
-                <Button onPress={onOpen1}>Open Modal 1</Button>
+                <Button onPress={onOpen1}>招待を受け取る</Button>
 
                 <Modal
                     size='5xl'
@@ -127,7 +155,7 @@ const JoinPage: React.FC = () => {
                                         <StyledMarkdown className={"prose dark:prose-dark"}>{markdown}</StyledMarkdown>
                                     ) : (
                                         <>
-                                            <Spinner label="利用規約を読み込んでいます..." size='lg' color="primary" />
+                                            <Spinner label="利用規約を読み込んでいます...(10秒ほどかかる場合があります)" size='lg' color="primary" />
                                         </>
                                     )}
                                 </ModalBody>
@@ -168,7 +196,7 @@ const JoinPage: React.FC = () => {
                                 <ModalBody>
                                     <Input
                                         label="名前"
-                                        placeholder="氏名を入力して下さい"
+                                        placeholder="氏名(本名)を入力して下さい"
                                         variant="bordered"
                                         isRequired
                                         value={name}
@@ -185,16 +213,35 @@ const JoinPage: React.FC = () => {
                                     />
                                     <Input
                                         label="所属"
-                                        placeholder="ない場合は「ない」と書いてください"
+                                        placeholder="なし場合は「なし」と書いてください"
                                         variant="bordered"
                                         isRequired
                                         value={affiliation}
                                         onChange={(e) => setAffiliation(e.target.value)}
                                     />
+                                    <Input
+                                        label="招待者"
+                                        placeholder="招待者の名前を入力してください"
+                                        variant="bordered"
+                                        isRequired
+                                        value={inviter}
+                                        onChange={(e) => setInviter(e.target.value)}
+
+                                    />
+                                    <Select
+                                        items={selectItems}
+                                        label="どの区分で参加しますか？"
+                                        placeholder="区分を選択してください"
+                                        className="max-w-xs"
+                                        isRequired
+                                        onChange={(e) => setClassification(e.target.value)}
+                                    >
+                                        {(selectItems) => <SelectItem key={selectItems.label}>{selectItems.label}</SelectItem>}
+                                    </Select>
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button color="danger" variant="flat" onPress={onClose}>
-                                        Close
+                                    <Button color="danger" variant="light" onPress={onClose}>
+                                        閉じる
                                     </Button>
                                     <Button color="primary" onPress={async () => { await handleRegister(); onClose(); }}>
                                         登録

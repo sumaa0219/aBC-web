@@ -3,7 +3,8 @@ import { signIn } from "next-auth/react";
 import React from 'react';
 import { useRouter } from "next/router";
 import DefaultLayout from "@/layouts/default";
-
+import { Button } from "@nextui-org/react";
+import { DiscordIcon } from "@/components/icons";
 const SignIn: React.FC = () => {
     const router = useRouter();
 
@@ -24,24 +25,10 @@ const SignIn: React.FC = () => {
                 />
 
                 <div style={{ display: 'flex', gap: '40px' }}>
-                    {/* <button
-                        onClick={handleServerJoin}
-                        style={{
-                            width: '100%',
-                            padding: '12px 24px',
-                            backgroundColor: '#6200ea',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            marginTop: '16px',
-                        }}
-                    >
-                        join our server!!
-                    </button> */}
 
-                    <button
+                    <Button
                         onClick={handleSignIn}
+                        radius="full"
                         style={{
                             width: '100%',
                             padding: '12px 24px',
@@ -52,9 +39,10 @@ const SignIn: React.FC = () => {
                             cursor: 'pointer',
                             marginTop: '16px',
                         }}
+                        startContent={<DiscordIcon size={20} />}
                     >
                         login with Discord
-                    </button>
+                    </Button>
                 </div>
             </div>
         </DefaultLayout>
