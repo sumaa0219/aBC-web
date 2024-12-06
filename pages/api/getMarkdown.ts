@@ -9,7 +9,9 @@ const notion = new Client({
 const n2m = new NotionToMarkdown({ notionClient: notion });
 
 // メモリキャッシュオブジェクト
-const cache: { [key: string]: string } = {};
+const cache: { data: any, timestamp: number } = { data: null, timestamp: 0 };
+const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6時間
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { pageId } = req.query;
@@ -18,9 +20,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Invalid pageId' });
     }
 
-    // キャッシュに存在するか確認
-    if (cache[pageId]) {
-        return res.status(200).json({ markdown: cache[pageId] });
+    const currentTime = Date.now();
+
+    // キャッシュが有効か確認
+    if (cache.data && (currentTime - cache.timestamp < CACHE_DURATION)) {
+        return res.status(200).json({ markdown: cache.data });
     }
 
     try {
@@ -29,10 +33,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const mdStringObject = n2m.toMarkdownString(mdblocks);
 
         // キャッシュに保存
-        cache[pageId] = mdStringObject.parent;
-
-        res.status(200).json({ markdown: mdStringObject.parent });
+        cache.data = mdStringObject.parent;
+        cache.timestamp = currentTime;
+        return res.status(200).json({ markdown: cache.data });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch markdown' });
+        return res.status(500).json({ error: 'Failed to fetch markdown' });
     }
 }

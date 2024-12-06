@@ -29,7 +29,8 @@ const JoinPage: React.FC = () => {
 
     const selectItems = [
         { key: "company", label: "企業" },
-        { key: "social-sector", label: "ソーシャルセクター" },
+        { key: "NPOGO", label: "NPO法人・非営利団体" },
+        { key: "social-sector", label: "行政・自治体" },
         { key: "individual", label: "個人" },
         { key: "other", label: "その他" }
     ];
