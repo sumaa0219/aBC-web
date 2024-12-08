@@ -67,7 +67,6 @@ export const Settings = () => {
                 return (
                     <Card key={fullKey} className="mb-4 w-full">
                         <CardBody>
-                            <h3>{key}</h3>
                             {data.descriptions && data.descriptions[key] && (
                                 <p>{data.descriptions[key].description}</p>
                             )}
