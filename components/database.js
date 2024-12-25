@@ -1,8 +1,8 @@
-import { collection, getDocs, getDoc, doc, setDoc, addDoc } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc, setDoc, addDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
-export async function readDB(coll, document = null) {
-    if (document) {
+export async function readDB(coll, document = "") {
+    if (document !== "") {
         // return await getDoc(doc(db, coll, document));
         const docRef = doc(db, coll, document);
         const result = await getDoc(docRef);
@@ -39,4 +39,8 @@ export async function writeDB(coll, document, data) {
 
 export async function writeDBDB(coll, data) {
     await addDoc(collection(db, coll), data);
+}
+
+export async function deleteDB(coll, document) {
+    await deleteDoc(doc(db, coll, document));
 }
