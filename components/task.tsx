@@ -30,12 +30,14 @@ interface SessionData {
     };
 }
 
+const { data: session } = useSession();
+const sessionData = session as SessionData | any;
+
 
 const showTask = (tasks: Task[], user: any, mode: string) => {
 
 
-    const { data: session } = useSession();
-    const sessionData = session as SessionData | any;
+
 
 
     const getUserName = (id: string) => {
