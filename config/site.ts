@@ -16,6 +16,10 @@ export const siteConfig = {
       label: "メンバー",
       href: "/member",
     },
+    {
+      label: "タスク",
+      href: "/task",
+    },
   ],
   managerNavItems: [
     {
@@ -29,6 +33,10 @@ export const siteConfig = {
     {
       label: "メンバー",
       href: "/member",
+    },
+    {
+      label: "タスク",
+      href: "/task",
     },
     {
       label: "管理",
