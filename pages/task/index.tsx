@@ -58,6 +58,7 @@ const TaskManager = () => {
         workingTime: '',
         limitDay: parseDate(new Date().toISOString().split('T')[0]) as DateValue | null,
         clientID: '',
+        isAnnounce: false,
         clientIcon: '',
         orderDay: '',
         supplierID: '',
