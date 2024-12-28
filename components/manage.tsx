@@ -43,6 +43,13 @@ export const Settings = () => {
     };
 
     const renderInputs = (data: any, parentKey: string = '') => {
+        // dataを名前順にソート
+        data = Object.keys(data)
+            .sort()
+            .reduce((obj: any, key: string) => {
+                obj[key] = data[key];
+                return obj;
+            }, {});
         return Object.keys(data).map((key) => {
             if (key === 'descriptions') return null; // descriptionキーをスキップ
 
