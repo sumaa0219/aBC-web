@@ -269,13 +269,13 @@ const TaskManager = () => {
     return (
         <DefaultLayout>
             <Tabs>
-                <Tab title="Tasks">
+                <Tab title="タスク一覧">
                     <div>
                         <h2>タスク一覧</h2>
                         {showTask(tasks, user, "client")}
                     </div>
                 </Tab>
-                <Tab title="Add Task">
+                <Tab title="タスク追加">
                     <Card>
                         <CardBody>
                             <Input name="name" label="タスク名" onChange={handleChange} isRequired />
@@ -333,12 +333,12 @@ const TaskManager = () => {
                         </CardBody>
                     </Card>
                 </Tab>
-                <Tab title="My Tasks">
+                <Tab title="タスク">
                     <div>
                         <h2>受注したタスク</h2>
                         {showTask(myTasksClient, user, "client")}
                         <h2>依頼したタスク</h2>
-                        {showTask(myTasksClient, user, "supplier")}
+                        {showTask(myTasksSupplier, user, "supplier")}
                     </div>
                 </Tab>
             </Tabs>
