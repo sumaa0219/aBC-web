@@ -22,7 +22,7 @@ function flattenData(data) {
     const result = {};
     for (const key in data) {
         if (Array.isArray(data[key])) {
-            result[key] = data[key].join(","); // 配列をカンマ区切りの文字列に変換
+            result[key] = data[key]; // 配列をそのまま保持
         } else if (typeof data[key] === 'object' && data[key] !== null) {
             result[key] = flattenData(data[key]); // 再帰的にフラット化
         } else {
