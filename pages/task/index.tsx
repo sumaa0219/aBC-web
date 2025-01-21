@@ -27,6 +27,7 @@ interface Task {
     rank: number;
     category: string;
     subCategory: string;
+    isTokenSent: boolean;
 }
 interface SessionData {
     userID: string;
@@ -90,6 +91,7 @@ const TaskManager = () => {
         limitDay: parseDate(new Date().toISOString().split('T')[0]) as DateValue | null,
         clientID: [],
         isAnnounce: false,
+        isTokenSent: false,
         clientIcon: [],
         orderDay: '',
         supplierID: "",
@@ -334,33 +336,38 @@ const TaskManager = () => {
                                 )}
                                 {mode === "supplier" && (
                                     <div>
-                                        <div>
-                                            <Button
-                                                color="danger"
-                                                onClick={() => {
-                                                    if (confirm("このタスクを本当に削除しますか？")) {
-                                                        handleTaskDelete(task.id as string);
-                                                    }
-                                                }}
-                                                style={{ float: 'right' }}
-                                            >
-                                                削除
-                                            </Button>
-                                        </div>
-                                        <div>
-                                            <Button
-                                                color="primary"
-                                                onClick={() => {
-                                                    if (confirm("このタスクを完了させますか？")) {
-                                                        handleTaskComplete(task.id as string);
-                                                    }
-                                                }}
-                                                style={{ float: 'right' }}
-                                            >
-                                                完了
-                                            </Button>
-                                        </div>
+                                        {task.workingStatus != "完了" && (
+                                            <div>
+                                                <div>
+                                                    <Button
+                                                        color="danger"
+                                                        onClick={() => {
+                                                            if (confirm("このタスクを本当に削除しますか？")) {
+                                                                handleTaskDelete(task.id as string);
+                                                            }
+                                                        }}
+                                                        style={{ float: 'right' }}
+                                                    >
+                                                        削除
+                                                    </Button>
+                                                </div>
+                                                <div>
+                                                    <Button
+                                                        color="primary"
+                                                        onClick={() => {
+                                                            if (confirm("このタスクを完了させますか？")) {
+                                                                handleTaskComplete(task.id as string);
+                                                            }
+                                                        }}
+                                                        style={{ float: 'right' }}
+                                                    >
+                                                        完了
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
+
                                 )}
                             </CardBody>
                         </Card>
