@@ -17,7 +17,7 @@ interface SessionData {
 
 export default function App() {
     const { data: session } = useSession();
-    const specificRoles = ['管理者', '運営', '開発者'];
+    const specificRoles = ['管理者', '開発者'];
     const sessionData = session as SessionData | any;
 
     if (session && sessionData.user && sessionData.highestRole && specificRoles.includes(sessionData.highestRole.name)) {
