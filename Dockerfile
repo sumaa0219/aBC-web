@@ -6,8 +6,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ワークスペースディレクトリを作成
+RUN mkdir -p /app
+COPY ./ /app
 WORKDIR /app
+
+# yarnと依存関係をインストール
+RUN yarn install
 
 # タイムゾーンを設定
 ENV TZ=Asia/Tokyo
-CMD [ "yarn", "build" ]
+CMD [ "yarn", "dev" ]
