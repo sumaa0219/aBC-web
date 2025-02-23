@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import DefaultLayout from "@/layouts/default";
 import { readDB } from "@/components/database";
-import { User } from "@nextui-org/react";
+import { User } from "@heroui/react";
 
 interface User {
     userDisplayName: string;

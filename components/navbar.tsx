@@ -1,14 +1,13 @@
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
-import { Navbar as NextUINavbar, NavbarContent, NavbarMenuItem, NavbarMenuToggle, NavbarMenu, NavbarBrand, NavbarItem } from "@nextui-org/navbar";
+import { Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link } from "@heroui/react";
+import { Navbar as NextUINavbar, NavbarContent, NavbarMenuItem, NavbarMenuToggle, NavbarMenu, NavbarBrand, NavbarItem } from "@heroui/react";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { DiscordIcon, Logo } from "@/components/icons";
 import { useState } from "react";
-import { Link } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 
 interface SessionData {

@@ -1,6 +1,6 @@
-import { Tabs, Tab, Chip } from "@nextui-org/react";
+import { Tabs, Tab, Chip } from "@heroui/react";
 import DefaultLayout from "@/layouts/default";
-import { Settings } from "@/components/manage";
+import { Settings, EventToken } from "@/components/manage";
 import { useSession } from 'next-auth/react';
 import ErrorPage from 'next/error'; // ErrorPageのインポートを追加
 
@@ -52,10 +52,12 @@ export default function App() {
                         key="sample2"
                         title={
                             <div className="flex items-center space-x-2">
-                                <span>まだなし</span>
+                                <span>特典コード</span>
                             </div>
                         }
-                    />
+                    ><EventToken />
+                    </Tab>
+
                     <Tab
                         key="BOTsettings"
                         title={

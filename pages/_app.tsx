@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { SessionProvider, useSession } from 'next-auth/react';
-import { NextUIProvider } from "@nextui-org/system";
+import { HeroUIProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
@@ -41,13 +41,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
       <NextThemesProvider>
-        <NextUIProvider>
+        <HeroUIProvider>
           <Auth>
             <ThemedComponent>
               <Component {...pageProps} />
             </ThemedComponent>
           </Auth>
-        </NextUIProvider>
+        </HeroUIProvider>
       </NextThemesProvider>
     </SessionProvider>
   );

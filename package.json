@@ -8,21 +8,24 @@
 		"start": "next start",
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
 	},
+	"yarn": {
+		"default": "1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447",
+		"fetchLatestFrom": {
+			"type": "npm",
+			"package": "yarn"
+		},
+		"transparent": {
+			"default": "3.6.3+sha224.524038cfca4ec8b2d45164c9c13f05e57a7d762f30542a8d647f69e3",
+			"commands": [
+				[
+					"yarn",
+					"dlx"
+				]
+			]
+		}
+	},
 	"dependencies": {
-		"@nextui-org/alert": "^2.2.8",
-		"@nextui-org/button": "2.0.38",
-		"@nextui-org/card": "^2.0.34",
-		"@nextui-org/code": "2.0.33",
-		"@nextui-org/input": "2.2.5",
-		"@nextui-org/kbd": "2.0.34",
-		"@nextui-org/link": "2.0.35",
-		"@nextui-org/listbox": "2.1.27",
-		"@nextui-org/navbar": "^2.0.37",
-		"@nextui-org/react": "^2.4.8",
-		"@nextui-org/snippet": "2.0.43",
-		"@nextui-org/switch": "2.0.34",
-		"@nextui-org/system": "2.2.6",
-		"@nextui-org/theme": "2.2.11",
+		"@heroui/react": "^2.7.2",
 		"@notionhq/client": "^2.2.15",
 		"@react-aria/visually-hidden": "3.8.12",
 		"@tailwindcss/typography": "^0.5.15",
@@ -30,13 +33,14 @@
 		"clsx": "2.1.1",
 		"firebase": "^11.0.1",
 		"firebase-admin": "^12.7.0",
-		"framer-motion": "~11.1.1",
+		"framer-motion": "^12.4.7",
 		"intl-messageformat": "^10.5.0",
 		"next": "14.2.4",
 		"next-auth": "^4.24.10",
 		"next-themes": "^0.2.1",
 		"nodemailer": "^6.9.16",
 		"notion-to-md": "^3.1.1",
+		"qrcode.react": "^4.2.0",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
 		"react-markdown": "^9.0.1",
@@ -68,5 +72,6 @@
 		"tailwind-variants": "0.1.20",
 		"tailwindcss": "3.4.3",
 		"typescript": "5.6.3"
-	}
+	},
+	"packageManager": "yarn@4.6.0"
 }

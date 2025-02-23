@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 import React from 'react';
 import { useRouter } from "next/router";
 import DefaultLayout from "@/layouts/default";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { DiscordIcon } from "@/components/icons";
 const SignIn: React.FC = () => {
     const router = useRouter();

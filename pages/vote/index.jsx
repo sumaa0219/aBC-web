@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import DefaultLayout from "@/layouts/default";
 import { readDB, writeDB } from "@/components/database";
-import { Card, CardHeader, CardBody, CardFooter, Divider, Button, Image } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, CardFooter, Divider, Button, Image } from "@heroui/react";
 
 export default function IndexPage() {
     const { data: session } = useSession();

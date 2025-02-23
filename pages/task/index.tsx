@@ -1,7 +1,7 @@
 import DefaultLayout from "@/layouts/default";
 import { useState, useEffect, use } from 'react';
 import { readDB, writeDB, deleteDB } from "@/components/database";
-import { Card, CardBody, CardHeader, Input, Button, Checkbox, DatePicker, Tabs, Tab, Accordion, AccordionItem, Avatar, AvatarGroup, Textarea, Select, SelectItem } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Input, Button, Checkbox, DatePicker, Tabs, Tab, Accordion, AccordionItem, Avatar, AvatarGroup, Textarea, Select, SelectItem } from "@heroui/react";
 import { DateValue, parseDate, getLocalTimeZone } from "@internationalized/date";
 import { useSession } from 'next-auth/react';
 import { Client } from "@notionhq/client";

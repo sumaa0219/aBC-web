@@ -2,7 +2,7 @@ import React, { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { readDB, writeDB } from "@/components/database"; // writeDB をインポート
 import DefaultLayout from "@/layouts/default";
-import { Input, Select, SelectItem, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Input, Select, SelectItem, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@heroui/react";
 import ReactMarkdown from "react-markdown";
 import styled from 'styled-components';
 
