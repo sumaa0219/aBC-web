@@ -1,6 +1,6 @@
 import { readDB, writeDB } from "@/components/database";
 import { useState, useEffect } from 'react';
-import { Card, CardBody, Input, Button, DatePicker, NumberInput, Form, Accordion, AccordionItem } from "@heroui/react";
+import { Card, CardBody, Input, Button, DatePicker, NumberInput, Form, Accordion, AccordionItem, Switch } from "@heroui/react";
 import { Tabs, Tab } from "@heroui/react"; // 修正: 正しいパッケージをインポート
 import { getLocalTimeZone, parseDate, today } from "@internationalized/date";
 import { fetchData } from "next-auth/client/_utils";
@@ -132,6 +132,7 @@ export const EventToken = () => {
     const [startDate, setStartDate] = useState<string>(today(getLocalTimeZone()).toString());
     const [endDate, setEndDate] = useState<string>(today(getLocalTimeZone()).add({ days: 7 }).toString());
     const [description, setDescription] = useState<string>("");
+    const [isActived, setIsActived] = useState<boolean>(true);
     const [codes, setCodes] = useState<any>({});
 
 
@@ -160,8 +161,8 @@ export const EventToken = () => {
                     src: "/favicon.ico",
                     x: undefined,
                     y: undefined,
-                    height: 24,
-                    width: 24,
+                    height: 36,
+                    width: 36,
                     excavate: true,
                 }}
             />
@@ -171,6 +172,7 @@ export const EventToken = () => {
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const code = Math.random().toString(36).slice(-11);
+        setIsActived(true);
         const newCodeData: codeData = {
             code: code,
             token: token,
@@ -179,13 +181,20 @@ export const EventToken = () => {
             startdate: startDate,
             enddate: endDate,
             useduser: [],
-            active: true,
+            active: isActived,
             description: description
         };
 
         // ここでnewCodeDataを送信する処理を追加
-        console.log(newCodeData);
         await writeDB("codes", code, newCodeData);
+        fetchCodes();
+    };
+
+    const handleSwitchActive = async (code: string) => {
+        const codeData = codes[code];
+        console.log(codeData.active);
+        codeData.active = !codeData.active;
+        await writeDB("codes", code, codeData);
         fetchCodes();
     };
 
@@ -261,6 +270,18 @@ export const EventToken = () => {
                                             subtitle={codeData.description}
                                             title={codeData.token.toString() + "トークン"}
                                         >
+                                            <p>開始日時: {codeData.startdate}</p>
+                                            <p>終了日時: {codeData.enddate}</p>
+                                            <p>使用回数: {codeData.used}/{codeData.maxused}</p>
+                                            <p>使用者: {codeData.useduser.join(",")}</p>
+
+
+                                            <Switch defaultSelected aria-label="Automatic updates" className="item" color="success" isSelected={codeData.active} onChange=
+                                                {() => {
+                                                    if (confirm("本当に変更しますか？")) {
+                                                        handleSwitchActive(codeData.code);
+                                                    }
+                                                }}>アクティブ</Switch>
                                             <QRCode url={"https://aaaaa.com/" + codeData.code} />
                                         </AccordionItem>
 
