@@ -1,4 +1,4 @@
-import { readDB, writeDB } from "@/components/database";
+import { readDB, writeDB, deleteDB } from "@/components/database";
 import { useState, useEffect } from 'react';
 import { Card, CardBody, Input, Button, DatePicker, NumberInput, Form, Accordion, AccordionItem, Switch } from "@heroui/react";
 import { Tabs, Tab } from "@heroui/react"; // 修正: 正しいパッケージをインポート
@@ -120,6 +120,7 @@ export const EventToken = () => {
         startdate: string;
         enddate: string;
         useduser: Array<string>;
+        applicableuser: Array<string>;
         active: boolean;
         description: string;
     }
@@ -134,6 +135,7 @@ export const EventToken = () => {
     const [description, setDescription] = useState<string>("");
     const [isActived, setIsActived] = useState<boolean>(true);
     const [codes, setCodes] = useState<any>({});
+    const [user, setUser] = useState<any>({});
 
 
     const fetchCodes = async () => {
@@ -143,9 +145,17 @@ export const EventToken = () => {
         }
     };
 
+    const fetchUsers = async () => {
+        const users = await readDB("user");
+        if (users) {
+            setUser(users);
+        }
+    };
+
     useEffect(() => {
 
         fetchCodes();
+        fetchUsers();
     }, []);
 
     const QRCode: FC<QRCodeProps> = (props) => {
@@ -181,8 +191,10 @@ export const EventToken = () => {
             startdate: startDate,
             enddate: endDate,
             useduser: [],
+            applicableuser: [],
             active: isActived,
             description: description
+
         };
 
         // ここでnewCodeDataを送信する処理を追加
@@ -197,6 +209,21 @@ export const EventToken = () => {
         await writeDB("codes", code, codeData);
         fetchCodes();
     };
+
+    const handleCodeDelete = async (code: string) => {
+        await deleteDB("codes", code);
+        fetchCodes();
+    }
+
+    const getUserName = (id: string) => {
+        if (!user[id]) {
+            setTimeout(() => {
+                getUserName(id);
+            }, 200); // 1秒待ってから再度実行
+            return "";
+        }
+        return user[id].userDisplayName;
+    }
 
     const create = () => {
         return (
@@ -273,7 +300,8 @@ export const EventToken = () => {
                                             <p>開始日時: {codeData.startdate}</p>
                                             <p>終了日時: {codeData.enddate}</p>
                                             <p>使用回数: {codeData.used}/{codeData.maxused}</p>
-                                            <p>使用者: {codeData.useduser.join(",")}</p>
+                                            <p>使用者: {codeData.useduser.map(getUserName).join(",")}</p>
+                                            <p>適用者: {codeData.applicableuser.map(getUserName).join(",")}</p>
 
 
                                             <Switch defaultSelected aria-label="Automatic updates" className="item" color="success" isSelected={codeData.active} onChange=
@@ -282,7 +310,40 @@ export const EventToken = () => {
                                                         handleSwitchActive(codeData.code);
                                                     }
                                                 }}>アクティブ</Switch>
-                                            <QRCode url={"https://aaaaa.com/" + codeData.code} />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+
+                                                <a href={`${window.location.origin}/code/${codeData.code}`} target="_blank" rel="noreferrer">{`${window.location.origin}/code/${codeData.code}`}</a>
+                                                <Button
+                                                    onClick={() => {
+                                                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                                                            navigator.clipboard.writeText(`${window.location.origin}/code/${codeData.code}`);
+                                                            alert("リンクがコピーされました");
+                                                        } else {
+                                                            const textArea = document.createElement("textarea");
+                                                            textArea.value = `${window.location.origin}/code/${codeData.code}`;
+                                                            document.body.appendChild(textArea);
+                                                            textArea.select();
+                                                            document.execCommand("copy");
+                                                            document.body.removeChild(textArea);
+                                                            alert("リンクがコピーされました");
+                                                        }
+                                                    }}
+                                                >
+                                                    コピー
+                                                </Button>
+
+
+                                            </div>
+                                            <QRCode url={`${window.location.origin}/code/${codeData.code}`} />
+                                            <Button
+                                                color="danger"
+                                                onClick={() => {
+                                                    if (confirm("この特典コードを本当に削除しますか？")) {
+                                                        handleCodeDelete(codeData.code);
+                                                    }
+                                                }}
+                                                style={{ float: 'right' }}
+                                            >削除</Button>
                                         </AccordionItem>
 
 

@@ -17,11 +17,16 @@ interface SessionData {
 
 export default function App() {
     const { data: session } = useSession();
-    const specificRoles = ['管理者', '開発者'];
+    const specificRoles = ['管理者', '開発者', "運営"];
     const sessionData = session as SessionData | any;
+    let manageFlag = false;
 
     if (session && sessionData.user && sessionData.highestRole && specificRoles.includes(sessionData.highestRole.name)) {
-        const manageFlag = true;
+        if (sessionData.highestRole.name === "管理者" || sessionData.highestRole.name === "開発者") {
+            manageFlag = true;
+        } else {
+            manageFlag = false;
+        }
     } else {
         return <ErrorPage statusCode={403} />;
     }
@@ -57,19 +62,21 @@ export default function App() {
                         }
                     ><EventToken />
                     </Tab>
-
-                    <Tab
-                        key="BOTsettings"
-                        title={
-                            <div className="flex items-center space-x-2">
-                                <span>BotSettings</span>
-                            </div>
-                        }
-                    >
-                        <Settings />
-                    </Tab>
+                    {manageFlag && (
+                        <Tab
+                            key="BOTsettings"
+                            title={
+                                <div className="flex items-center space-x-2">
+                                    <span>BotSettings</span>
+                                </div>
+                            }
+                        >
+                            <Settings />
+                        </Tab>
+                    )}
                 </Tabs>
             </div>
-        </DefaultLayout>
+
+        </DefaultLayout >
     );
 };
